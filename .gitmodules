@@ -1,0 +1,3 @@
+[submodule "LinkBERT"]
+	path = LinkBERT
+	url = https://github.com/michiyasunaga/LinkBERT.git
