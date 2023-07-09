@@ -1,0 +1,9 @@
+[submodule "datasets/LinkBERT"]
+	path = datasets/LinkBERT
+	url = https://github.com/michiyasunaga/LinkBERT.git
+[submodule "datasets/LiveQA"]
+	path = datasets/LiveQA
+	url = https://github.com/abachaa/LiveQA_MedicalTask_TREC2017
+[submodule "datasets/MedicationQA"]
+	path = datasets/MedicationQA
+	url = https://github.com/abachaa/Medication_QA_MedInfo2019
