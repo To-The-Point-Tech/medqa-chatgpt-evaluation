@@ -13,4 +13,4 @@ rm -rf data/seqcls
 rm -rf data/tokcls
 rm -rf data/qa
 
-python scripts/download_medmcqa.py
+python utils/download_medmcqa.py
