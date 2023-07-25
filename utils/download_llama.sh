@@ -8,9 +8,6 @@ echo "Downloading LICENSE and Acceptable Usage Policy";
 wget ${PRESIGNED_URL/"*"/"LICENSE"} -O ${TARGET_FOLDER}"/LICENSE";
 wget ${PRESIGNED_URL/"*"/"USE_POLICY.md"} -O ${TARGET_FOLDER}"/USE_POLICY.md";
 
-echo "Downloading tokenizer";
-wget ${PRESIGNED_URL/"*"/"tokenizer.model"} -O ${TARGET_FOLDER}"/tokenizer.model";
-
 if [[ $MODEL_PATH == *"7b"* ]]; then
     SHARD=0;
 elif [[ $MODEL_PATH == *"13b"* ]]; then
@@ -21,6 +18,9 @@ fi;
 
 echo "Downloading $MODEL_PATH";
 mkdir -p ${TARGET_FOLDER}/$MODEL_PATH;
+
+echo "Downloading tokenizer";
+wget ${PRESIGNED_URL/"*"/"tokenizer.model"} -O ${TARGET_FOLDER}"/$MODEL_PATH/tokenizer.model";
 for s in $(seq -f "0%g" 0 $SHARD);
 do
     wget ${PRESIGNED_URL/"*"/"${MODEL_PATH}/consolidated.${s}.pth"} -O ${TARGET_FOLDER}/$MODEL_PATH/consolidated.$s.pth;
