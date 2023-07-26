@@ -26,6 +26,6 @@ RUN python -m pip install --upgrade pip
 RUN pip install torch torchvision torchaudio --index-url https://download.pytorch.org/whl/cu118
 
 COPY requirements.txt .
-RUN pip install -r equirements.txt
+RUN pip install -r requirements.txt
 
 RUN pip cache purge
