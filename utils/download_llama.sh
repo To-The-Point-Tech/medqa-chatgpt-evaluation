@@ -29,5 +29,5 @@ do
     wget ${PRESIGNED_URL/"*"/"${MODEL_PATH}/consolidated.${s}.pth"} -O ${TARGET_FOLDER}/$MODEL_PATH/consolidated.$s.pth;
 done;
 wget ${PRESIGNED_URL/"*"/"${MODEL_PATH}/params.json"} -O ${TARGET_FOLDER}/$MODEL_PATH/params.json;
-mv ${TARGET_FOLDER}/$MODEL_PATH ${x}/$SHORT;
-python -m transformers.models.llama.convert_llama_weights_to_hf --input_dir models --model_size 7B --output_dir models/llama-2-7b-hf;
+mv ${TARGET_FOLDER}/$MODEL_PATH ${TARGET_FOLDER}/$SHORT;
+python -m transformers.models.llama.convert_llama_weights_to_hf --input_dir models --model_size 7B --output_dir models/$MODEL_PATH-hf;
