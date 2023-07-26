@@ -2,12 +2,11 @@ import json
 from argparse import ArgumentParser
 import os
 import tiktoken
-from os import mkdir
-from collections import defaultdict
 from os.path import exists, join
 from time import sleep
-from llama import Llama
-import subprocess
+
+from transformers import pipeline, AutoTokenizer
+import torch
 
 from utils.tothepoint_io import ttp_retrieve, ttp_renew_token, ttp_validate_token
 
@@ -60,6 +59,16 @@ def generate_message(question: str, possible_answers: list[str], additional_cont
     ]
     return message
 
+def to_llama_format(message: list):
+    system_message, *other_messages, user_message = message
+    system_promt = system_message["content"]
+    user_prompt = user_message["content"]
+    return f"""<s>[INST] <<SYS>>
+    {system_promt}
+    <</SYS>>
+    {user_prompt} [/INST]
+    """ 
+
 
 def run_evaluation(model: str, task: str, split: str):
     data = []
@@ -72,12 +81,13 @@ def run_evaluation(model: str, task: str, split: str):
     elif "chatgpt" in model:
         openai_model_name = "gpt-3.5-turbo"
     elif "llama" in model:
-        subprocess.run(["bash", "utils/download_llama.sh", model])
-        llama_generator = Llama.build(
-            ckpt_dir=f"models/{model}",
-            tokenizer_path=f"models/{model}/tokenizer.model",
-            max_batch_size=1,
-            max_seq_len=4096, 
+        tokenizer = AutoTokenizer.from_pretrained(f"model/{model}-hf")
+        pipeline = pipeline(
+            "text-generation",
+            model=f"model/{model}-hf",
+            torch_dtype=torch.float16,
+            device_map="auto",
+            device=0
         )
     else:
         raise ValueError(f"Unknown model {model}")
@@ -131,11 +141,18 @@ def run_evaluation(model: str, task: str, split: str):
                 elif "llama" in model:
                     context = None
                     message = generate_message(question=question, possible_answers=answers, additional_context=context)
-                    response = llama_generator.chat_completion(
-                        message,  
-                        max_gen_len=3,
-                        temperature=0.2
+                    message = to_llama_format(message)
+                    sequences = pipeline(
+                        message,
+                        do_sample=True,
+                        top_k=10,
+                        num_return_sequences=1,
+                        eos_token_id=tokenizer.eos_token_id,
+                        max_length=4096,
+                        temperature=0.2,
+                        max_new_tokens=3,
                     )
+                    class_ = sequences[0]["generated_text"]
                 else:
                     raise ValueError(f"Unsupported model {model}")
                 print(class_)
