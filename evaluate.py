@@ -151,7 +151,7 @@ def run_evaluation(model: str, task: str, split: str):
                         max_length=4096,
                         temperature=0.2,
                         max_new_tokens=3,
-                        return_full_text=True,
+                        return_full_text=False,
                     )
                     class_ = sequences[0]["generated_text"]
                 else:
