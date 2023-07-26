@@ -81,10 +81,10 @@ def run_evaluation(model: str, task: str, split: str):
     elif "chatgpt" in model:
         openai_model_name = "gpt-3.5-turbo"
     elif "llama" in model:
-        tokenizer = AutoTokenizer.from_pretrained(f"model/{model}-hf")
+        tokenizer = AutoTokenizer.from_pretrained(f"models/{model}-hf")
         pipeline = pipeline(
             "text-generation",
-            model=f"model/{model}-hf",
+            model=f"models/{model}-hf",
             torch_dtype=torch.float16,
             device_map="auto",
             device=0
@@ -151,6 +151,7 @@ def run_evaluation(model: str, task: str, split: str):
                         max_length=4096,
                         temperature=0.2,
                         max_new_tokens=3,
+                        return_full_text=True,
                     )
                     class_ = sequences[0]["generated_text"]
                 else:
