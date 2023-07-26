@@ -28,4 +28,7 @@ RUN pip install torch torchvision torchaudio --index-url https://download.pytorc
 COPY requirements.txt .
 RUN pip install -r requirements.txt
 
+WORKDIR /medqa
+COPY . /medqa
+
 RUN pip cache purge
