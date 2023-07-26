@@ -82,7 +82,7 @@ def run_evaluation(model: str, task: str, split: str):
         openai_model_name = "gpt-3.5-turbo"
     elif "llama" in model:
         tokenizer = AutoTokenizer.from_pretrained(f"models/{model}-hf")
-        pipeline = pipeline(
+        pipe = pipeline(
             "text-generation",
             model=f"models/{model}-hf",
             torch_dtype=torch.float16,
@@ -142,7 +142,7 @@ def run_evaluation(model: str, task: str, split: str):
                     context = None
                     message = generate_message(question=question, possible_answers=answers, additional_context=context)
                     message = to_llama_format(message)
-                    sequences = pipeline(
+                    sequences = pipe(
                         message,
                         do_sample=True,
                         top_k=10,
