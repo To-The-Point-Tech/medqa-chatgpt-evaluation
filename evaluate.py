@@ -66,8 +66,7 @@ def to_llama_format(message: list):
     return f"""<s>[INST] <<SYS>>
     {system_promt}
     <</SYS>>
-    {user_prompt} [/INST]
-    """ 
+    {user_prompt} [/INST]""" 
 
 
 def run_evaluation(model: str, task: str, split: str):
